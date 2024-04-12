@@ -61,55 +61,48 @@ namespace XLeech
 
                 _parallelCrawlerEngine.SiteCrawlStarting += (sender, args) =>
                 {
+
                 };
 
-                _parallelCrawlerEngine.SiteCrawlCompleted += (sender, args) =>
+                _parallelCrawlerEngine.SiteCrawlCompleted += async (sender, siteCrawleArgs) =>
                 {
-                    //if (postSuccess/5 == 0)
-                    //{
-                    //    var siteToCrawlUrls = new List<SiteToCrawl> {
-                    //        new SiteToCrawl {Uri = new Uri("https://truyensextv.pro/du-do-me-vao-con-duong-loan-luan/")},
-                    //        new SiteToCrawl {Uri = new Uri("https://truyensextv.pro/lua-tinh-nu-sinh/")},
-                    //    };
-                    //    ParallelCrawlerEngine.Impls.SiteToCrawlProvider.AddSitesToCrawl(siteToCrawlUrls);
-                    //}
+                    var siteConfig = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.SiteConfig as SiteConfig;
+                    var categoryNextPageURL = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.CategoryNextPageURL as string;
+                    siteConfig.CategoryNextPageURL = categoryNextPageURL;
+                    siteConfig.IsDone = string.IsNullOrEmpty(categoryNextPageURL);
+                    await _siteConfigRepository.UpdateAsync(siteConfig);
+                    if (!siteConfig.IsDone)
+                    {
+                        CrawleSite(siteConfig);
+                    }
                 };
 
                 _parallelCrawlerEngine.AllCrawlsCompleted += async (sender, eventArgs) =>
                 {
                     Interlocked.Increment(ref categoryCrawled);
                     LogLabel(this.CategoryCrawledLb, categoryCrawled.ToString());
-
-                    //siteConfig.IsDone = string.IsNullOrEmpty(siteConfig.CategoryNextPageURL);
-                    //await _siteConfigRepository.UpdateAsync(siteConfig);
-                    //_parallelCrawlerEngine.Impls.SiteToCrawlProvider.AddSitesToCrawl(siteToCrawlUrls);
-                    //if (!siteConfig.IsDone)
-                    //{
-                    //    ParallelCrawlerEngineUrls(siteConfig);
-                    //}
                 };
             }
         }
 
         private async void CrawlerInstanceCreated(object sender, CrawlerInstanceCreatedArgs eventArgs)
         {
-            var crawlId = Guid.NewGuid();
-            eventArgs.Crawler.CrawlBag.CrawlId = crawlId;
-            eventArgs.Crawler.CrawlBag.SiteConfig = eventArgs.SiteToCrawl.SiteBag;
+            eventArgs.Crawler.CrawlBag.SiteConfig = eventArgs.SiteToCrawl.SiteBag.SiteConfig;
             eventArgs.Crawler.PageCrawlCompleted += PageCrawlCompleted;
-            IEnumerable<string> _urls = new List<string>();
-            eventArgs.Crawler.CrawlContext.Scheduler.Add(_urls.Select(u => new PageToCrawl(new Uri(u))));
+
+            var postUrls = eventArgs.SiteToCrawl.SiteBag.PostUrls as List<string>;
+            eventArgs.Crawler.CrawlContext.Scheduler.Add(postUrls.Select(u => new PageToCrawl(new Uri(u))));
         }
 
         private async void PageCrawlCompleted(object abotSender, PageCrawlCompletedArgs abotEventArgs)
         {
-            var siteBag = abotEventArgs.CrawlContext.CrawlBag.SiteConfig as SiteConfig;
+            var siteConfig = abotEventArgs.CrawlContext.CrawlBag.SiteConfig as SiteConfig;
 
             try
             {
-                if (string.IsNullOrEmpty(abotEventArgs.CrawledPage.Content.Text) || siteBag == null) throw new Exception("Content empty");
+                if (string.IsNullOrEmpty(abotEventArgs.CrawledPage.Content.Text) || siteConfig == null) throw new Exception("Content empty");
 
-                var crawlerResult = await _crawlerService.PageCrawlCompleted(abotSender, abotEventArgs, siteBag);
+                var crawlerResult = await _crawlerService.PageCrawlCompleted(abotSender, abotEventArgs, siteConfig);
 
                 Interlocked.Increment(ref postSuccess);
                 _parallelCrawlerEngine.Impls.ImplementationBag.PostSuccess = postSuccess;
@@ -123,7 +116,7 @@ namespace XLeech
                 _parallelCrawlerEngine.Impls.ImplementationBag.PostFailed = postFailed;
 
                 LogLabel(this.PostFailedLb, postFailed.ToString());
-                LogPost(string.Format("{0} Exception {1}", siteBag?.Url, ex.Message));
+                LogPost(string.Format("{0} Exception {1}", siteConfig?.Url, ex.Message));
             }
         }
 
@@ -189,16 +182,19 @@ namespace XLeech
                 // get urls from url category page
                 if (siteConfig.IsPageUrl == false)
                 {
+                    var urlCategoryPageCrawle = _crawlerService.GetURLCategoryPageCrawle(siteConfig);
                     var categoryPageInfo = await _crawlerService.GetInfoCategoryPage(siteConfig, config);
                     if (categoryPageInfo != null && categoryPageInfo.PostUrls.Any())
                     {
-                        siteToCrawls.AddRange(categoryPageInfo.PostUrls.Select(x => new SiteToCrawl
+                        var siteToCrawle = new SiteToCrawl
                         {
-                            Uri = new Uri(x),
-                            SiteBag = siteConfig
-                        }));
+                            Uri = new Uri(urlCategoryPageCrawle)
+                        };
+                        siteToCrawle.SiteBag.SiteConfig = siteConfig;
+                        siteToCrawle.SiteBag.PostUrls = categoryPageInfo.PostUrls;
+                        siteToCrawle.SiteBag.CategoryNextPageURL = categoryPageInfo.CategoryNextPageURL;
+                        siteToCrawls.Add(siteToCrawle);
                     }
-                    siteConfig.CategoryNextPageURL = categoryPageInfo?.CategoryNextPageURL;
                 }
 
                 _parallelCrawlerEngine.Impls.SiteToCrawlProvider.AddSitesToCrawl(siteToCrawls);
