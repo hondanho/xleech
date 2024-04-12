@@ -16,6 +16,7 @@ namespace XLeech.Core
         private const string UriApi = "https://bepxinhhanoi.com/wp-json/";
         private const string UserName = "admin";
         private const string Password = "b3sR lCNw aPla aMZ9 XvKt qi0j";
+        public readonly bool IsTryTest = false;
 
         public WordpressProcessor(SiteConfig siteConfig)
         {
@@ -24,9 +25,8 @@ namespace XLeech.Core
                     !string.IsNullOrEmpty(siteConfig.WordpressUserName) ? siteConfig.WordpressUserName : UserName,
                     !string.IsNullOrEmpty(siteConfig.WordpressApplicationPW) ? siteConfig.WordpressApplicationPW : Password
                 );
+            this.IsTryTest = siteConfig.IsTryTest;
         }
-
-        
 
         public async Task<CategoryModel> IsExistCategory(CategoryModel categoryModel, SiteConfig siteConfig)
         {

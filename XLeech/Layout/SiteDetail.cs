@@ -57,82 +57,83 @@ namespace XLeech
             this.saveBtn.Text = ButtonNameConsts.Edit;
             this.saveBtn.Click += EditBtn_Click;
 
-            var site = _dbContext.Sites
+            var siteConfig = _dbContext.Sites
                         .Where(x => x.Id == siteId)
                         .Include(x => x.Category)
                         .Include(x => x.Post)
                         .FirstOrDefault();
-            _siteConfig = site;
-            if (site != null)
+            _siteConfig = siteConfig;
+            if (siteConfig != null)
             {
                 // site
-                this.NameTb.Text = site.Name;
-                this.UrlTxt.Text = site.Url;
-                this.ActiveForSchedulingCb.Checked = site.ActiveForScheduling;
-                this.CategoryPageRb.Checked = !site.IsPageUrl;
-                this.ListUrlRb.Checked = site.IsPageUrl;
-                this.CheckDuplicatePostViaContentCb.Checked = site.CheckDuplicatePostViaContent;
-                this.CheckDuplicatePostViaTitleCb.Checked = site.CheckDuplicatePostViaTitle;
-                this.CheckDuplicatePostViaUrlCb.Checked = site.CheckDuplicatePostViaUrl;
-                this.MaximumPagesCrawlPerCategoryNumeric.Value = (decimal)site.MaximumPagesCrawlPerCategory;
-                this.MaximumPagesCrawlPerPostNumeric.Value = (decimal)site.MaximumPagesCrawlPerPost;
-                this.HTTPUserAgentTb.Text = site.HTTPUserAgent;
-                this.connectionTimeoutNumeric.Value = (decimal)site.ConnectionTimeout;
-                this.UseProxyCb.Checked = site.UseProxy;
-                this.ProxiesTb.Text = site.Proxies;
-                this.ActiveForPostSpinningCb.Checked = site.ActiveForPostSpinning;
-                this.ActiveForPostTranslationCb.Checked = site.ActiveForPostTranslation;
-                this.RandomizeProxiesCb.Checked = site.RandomizeProxies;
-                this.TimeIntervalNumeric.Value = (decimal)site.TimeInterval;
-                this.NoteTb.Text = site.Notes;
-                this.CookieCb.Text = site.Cookie;
-                this.ProxyRetryLimitNumeric.Value = site.ProxyRetryLimit;
-                this.WordpressApiUrlTb.Text = site.WordpressApiUrl;
-                this.WordpressUserNameTb.Text = site.WordpressUserName;
-                this.WordpressApplicationPWTb.Text = site.WordpressApplicationPW;
+                this.NameTb.Text = siteConfig.Name;
+                this.UrlTxt.Text = siteConfig.Url;
+                this.ActiveForSchedulingCb.Checked = siteConfig.ActiveForScheduling;
+                this.IsTryTestCb.Checked = siteConfig.IsTryTest;
+                this.CategoryPageRb.Checked = !siteConfig.IsPageUrl;
+                this.ListUrlRb.Checked = siteConfig.IsPageUrl;
+                this.CheckDuplicatePostViaContentCb.Checked = siteConfig.CheckDuplicatePostViaContent;
+                this.CheckDuplicatePostViaTitleCb.Checked = siteConfig.CheckDuplicatePostViaTitle;
+                this.CheckDuplicatePostViaUrlCb.Checked = siteConfig.CheckDuplicatePostViaUrl;
+                this.MaximumPagesCrawlPerCategoryNumeric.Value = (decimal)siteConfig.MaximumPagesCrawlPerCategory;
+                this.MaximumPagesCrawlPerPostNumeric.Value = (decimal)siteConfig.MaximumPagesCrawlPerPost;
+                this.HTTPUserAgentTb.Text = siteConfig.HTTPUserAgent;
+                this.connectionTimeoutNumeric.Value = (decimal)siteConfig.ConnectionTimeout;
+                this.UseProxyCb.Checked = siteConfig.UseProxy;
+                this.ProxiesTb.Text = siteConfig.Proxies;
+                this.ActiveForPostSpinningCb.Checked = siteConfig.ActiveForPostSpinning;
+                this.ActiveForPostTranslationCb.Checked = siteConfig.ActiveForPostTranslation;
+                this.RandomizeProxiesCb.Checked = siteConfig.RandomizeProxies;
+                this.TimeIntervalNumeric.Value = (decimal)siteConfig.TimeInterval;
+                this.NoteTb.Text = siteConfig.Notes;
+                this.CookieCb.Text = siteConfig.Cookie;
+                this.ProxyRetryLimitNumeric.Value = siteConfig.ProxyRetryLimit;
+                this.WordpressApiUrlTb.Text = siteConfig.WordpressApiUrl;
+                this.WordpressUserNameTb.Text = siteConfig.WordpressUserName;
+                this.WordpressApplicationPWTb.Text = siteConfig.WordpressApplicationPW;
 
                 // category
-                this.CategoryMapTb.Text = site.Category.CategoryMap;
-                this.SaveFeaturedImagesCb.Checked = site.Category.SaveFeaturedImages;
-                this.FeaturedImageSelectorTb.Text = site.Category.FeaturedImageSelector;
-                this.FindAndReplaceRawHTMLTb.Text = site.Category.FindAndReplaceRawHTML;
-                this.RemoveElementAttributesTb.Text = site.Category.RemoveElementAttributes;
-                this.UnnecessaryElementsTb.Text = site.Category.UnnecessaryElements;
-                this.CrawlerUrlsTb.Text = site.Category.Urls;
-                this.CategoryListPageURLTb.Text = site.Category.CategoryListPageURL;
-                this.CategoryListURLSelectorTb.Text = site.Category.CategoryListURLSelector;
-                this.CategoryPostUrlTb.Text = site.Category.CategoryPostURL;
-                this.CategoryPostURLSelectorTb.Text = site.Category.CategoryPostURLSelector;
-                this.CategoryNextPageURLSelectorTb.Text = site.Category.CategoryNextPageURLSelector;
-                this.CategoryDescriptionTb.Text = site.Category.Description;
+                this.CategoryMapTb.Text = siteConfig.Category.CategoryMap;
+                this.SaveFeaturedImagesCb.Checked = siteConfig.Category.SaveFeaturedImages;
+                this.FeaturedImageSelectorTb.Text = siteConfig.Category.FeaturedImageSelector;
+                this.FindAndReplaceRawHTMLTb.Text = siteConfig.Category.FindAndReplaceRawHTML;
+                this.RemoveElementAttributesTb.Text = siteConfig.Category.RemoveElementAttributes;
+                this.UnnecessaryElementsTb.Text = siteConfig.Category.UnnecessaryElements;
+                this.CrawlerUrlsTb.Text = siteConfig.Category.Urls;
+                this.CategoryListPageURLTb.Text = siteConfig.Category.CategoryListPageURL;
+                this.CategoryListURLSelectorTb.Text = siteConfig.Category.CategoryListURLSelector;
+                this.CategoryPostUrlTb.Text = siteConfig.Category.CategoryPostURL;
+                this.CategoryPostURLSelectorTb.Text = siteConfig.Category.CategoryPostURLSelector;
+                this.CategoryNextPageURLSelectorTb.Text = siteConfig.Category.CategoryNextPageURLSelector;
+                this.CategoryDescriptionTb.Text = siteConfig.Category.Description;
 
                 //post
-                this.PostFormatCb.Text = site.Post.PostFormat;
-                this.PostTypeCb.Text = site.Post.PostType;
-                this.PostAuthorTb.Text = site.Post.PostAuthor;
-                this.PostStatusCb.Text = site.Post.PostStatus;
-                this.PostTitleSelectorTb.Text = site.Post.PostTitleSelector;
-                this.PostExcerptSelectorTb.Text = site.Post.PostExcerptSelector;
-                this.PostContentSelectorTb.Text = site.Post.PostContentSelector;
-                this.PostTagSelectorTb.Text = site.Post.PostTagSelector;
-                this.PostSlugSelectorTb.Text = site.Post.PostSlugSelector;
-                this.CategoryNameSelectorTb.Text = site.Post.CategoryNameSelector;
-                this.CategoryNameSeparatorSelectorTb.Text = site.Post.CategoryNameSeparatorSelector;
-                this.PostDateSelectorTb.Text = site.Post.PostDateSelector;
-                this.SaveMetaKeywordsCb.Checked = site.Post.SaveMetaKeywords;
-                this.AddMetaKeywordsAsTagCb.Checked = site.Post.AddMetaKeywordsAsTag;
-                this.SaveMetaDescriptionCb.Checked = site.Post.SaveMetaDescription;
-                this.SaveFeaturedImagesPostCb.Checked = site.Post.SaveFeaturedImages;
-                this.PostFeaturedImageSelectorTb.Text = site.Post.FeaturedImageSelector;
-                this.PaginatePostsCb.Checked = site.Post.PaginatePosts;
-                this.PostNextPageURLSelectorTb.Text = site.Post.PostNextPageURLSelector;
-                this.PostFindAndReplaceRawHTMLTb.Text = site.Post.FindAndReplaceRawHTML;
-                this.PostRemoveElementAttributesTb.Text = site.Post.RemoveElementAttributes;
-                this.PostUnnecessaryElementsTb.Text = site.Post.UnnecessaryElements;
+                this.PostFormatCb.Text = siteConfig.Post.PostFormat;
+                this.PostTypeCb.Text = siteConfig.Post.PostType;
+                this.PostAuthorTb.Text = siteConfig.Post.PostAuthor;
+                this.PostStatusCb.Text = siteConfig.Post.PostStatus;
+                this.PostTitleSelectorTb.Text = siteConfig.Post.PostTitleSelector;
+                this.PostExcerptSelectorTb.Text = siteConfig.Post.PostExcerptSelector;
+                this.PostContentSelectorTb.Text = siteConfig.Post.PostContentSelector;
+                this.PostTagSelectorTb.Text = siteConfig.Post.PostTagSelector;
+                this.PostSlugSelectorTb.Text = siteConfig.Post.PostSlugSelector;
+                this.CategoryNameSelectorTb.Text = siteConfig.Post.CategoryNameSelector;
+                this.CategoryNameSeparatorSelectorTb.Text = siteConfig.Post.CategoryNameSeparatorSelector;
+                this.PostDateSelectorTb.Text = siteConfig.Post.PostDateSelector;
+                this.SaveMetaKeywordsCb.Checked = siteConfig.Post.SaveMetaKeywords;
+                this.AddMetaKeywordsAsTagCb.Checked = siteConfig.Post.AddMetaKeywordsAsTag;
+                this.SaveMetaDescriptionCb.Checked = siteConfig.Post.SaveMetaDescription;
+                this.SaveFeaturedImagesPostCb.Checked = siteConfig.Post.SaveFeaturedImages;
+                this.PostFeaturedImageSelectorTb.Text = siteConfig.Post.FeaturedImageSelector;
+                this.PaginatePostsCb.Checked = siteConfig.Post.PaginatePosts;
+                this.PostNextPageURLSelectorTb.Text = siteConfig.Post.PostNextPageURLSelector;
+                this.PostFindAndReplaceRawHTMLTb.Text = siteConfig.Post.FindAndReplaceRawHTML;
+                this.PostRemoveElementAttributesTb.Text = siteConfig.Post.RemoveElementAttributes;
+                this.PostUnnecessaryElementsTb.Text = siteConfig.Post.UnnecessaryElements;
             }
 
             SetShowTypeCrawler();
-            SetSettingExport(site);
+            SetSettingExport(siteConfig);
         }
 
         private void SetSettingExport(SiteConfig siteConfig)
@@ -329,6 +330,7 @@ namespace XLeech
             siteConfig.Name = this.NameTb.Text;
             siteConfig.Url = this.UrlTxt.Text;
             siteConfig.ActiveForScheduling = this.ActiveForSchedulingCb.Checked;
+            siteConfig.IsTryTest = this.IsTryTestCb.Checked;
             siteConfig.IsPageUrl = IsCrawleUrls();
             siteConfig.CheckDuplicatePostViaContent = this.CheckDuplicatePostViaContentCb.Checked;
             siteConfig.CheckDuplicatePostViaTitle = this.CheckDuplicatePostViaTitleCb.Checked;

@@ -156,6 +156,8 @@
             label45 = new Label();
             label11 = new Label();
             ImportSettingTb = new RichTextBox();
+            IsTryTestCb = new CheckBox();
+            label9 = new Label();
             postTab.SuspendLayout();
             categoryTab.SuspendLayout();
             mainTab.SuspendLayout();
@@ -971,6 +973,8 @@
             // mainTab
             // 
             mainTab.AutoScroll = true;
+            mainTab.Controls.Add(IsTryTestCb);
+            mainTab.Controls.Add(label9);
             mainTab.Controls.Add(ActiveForPostTranslationCb);
             mainTab.Controls.Add(ActiveForPostSpinningCb);
             mainTab.Controls.Add(label8);
@@ -1027,7 +1031,7 @@
             // 
             ActiveForPostTranslationCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ActiveForPostTranslationCb.AutoSize = true;
-            ActiveForPostTranslationCb.Location = new Point(245, 1000);
+            ActiveForPostTranslationCb.Location = new Point(245, 1052);
             ActiveForPostTranslationCb.Margin = new Padding(3, 4, 3, 4);
             ActiveForPostTranslationCb.Name = "ActiveForPostTranslationCb";
             ActiveForPostTranslationCb.Size = new Size(18, 17);
@@ -1038,7 +1042,7 @@
             // 
             ActiveForPostSpinningCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ActiveForPostSpinningCb.AutoSize = true;
-            ActiveForPostSpinningCb.Location = new Point(245, 953);
+            ActiveForPostSpinningCb.Location = new Point(245, 1005);
             ActiveForPostSpinningCb.Margin = new Padding(3, 4, 3, 4);
             ActiveForPostSpinningCb.Name = "ActiveForPostSpinningCb";
             ActiveForPostSpinningCb.Size = new Size(18, 17);
@@ -1048,7 +1052,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(15, 999);
+            label8.Location = new Point(15, 1051);
             label8.Name = "label8";
             label8.Size = new Size(180, 20);
             label8.TabIndex = 53;
@@ -1057,7 +1061,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(15, 952);
+            label7.Location = new Point(15, 1004);
             label7.Name = "label7";
             label7.Size = new Size(166, 20);
             label7.TabIndex = 52;
@@ -1067,7 +1071,7 @@
             // 
             label53.AutoSize = true;
             label53.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label53.Location = new Point(15, 628);
+            label53.Location = new Point(15, 680);
             label53.Name = "label53";
             label53.Size = new Size(101, 20);
             label53.TabIndex = 51;
@@ -1076,7 +1080,7 @@
             // label52
             // 
             label52.AutoSize = true;
-            label52.Location = new Point(15, 1145);
+            label52.Location = new Point(15, 1197);
             label52.Name = "label52";
             label52.Size = new Size(82, 20);
             label52.TabIndex = 50;
@@ -1085,7 +1089,7 @@
             // label51
             // 
             label51.AutoSize = true;
-            label51.Location = new Point(15, 1199);
+            label51.Location = new Point(15, 1251);
             label51.Name = "label51";
             label51.Size = new Size(151, 20);
             label51.TabIndex = 49;
@@ -1094,7 +1098,7 @@
             // label50
             // 
             label50.AutoSize = true;
-            label50.Location = new Point(15, 1092);
+            label50.Location = new Point(15, 1144);
             label50.Name = "label50";
             label50.Size = new Size(53, 20);
             label50.TabIndex = 48;
@@ -1103,7 +1107,7 @@
             // WordpressUserNameTb
             // 
             WordpressUserNameTb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            WordpressUserNameTb.Location = new Point(245, 1145);
+            WordpressUserNameTb.Location = new Point(245, 1197);
             WordpressUserNameTb.Margin = new Padding(3, 4, 3, 4);
             WordpressUserNameTb.Name = "WordpressUserNameTb";
             WordpressUserNameTb.PlaceholderText = "admin";
@@ -1113,7 +1117,7 @@
             // WordpressApplicationPWTb
             // 
             WordpressApplicationPWTb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            WordpressApplicationPWTb.Location = new Point(245, 1199);
+            WordpressApplicationPWTb.Location = new Point(245, 1251);
             WordpressApplicationPWTb.Margin = new Padding(3, 4, 3, 4);
             WordpressApplicationPWTb.Name = "WordpressApplicationPWTb";
             WordpressApplicationPWTb.PlaceholderText = "b3sR lCNw aPla aMZ9 XvKt qi0q";
@@ -1123,7 +1127,7 @@
             // WordpressApiUrlTb
             // 
             WordpressApiUrlTb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            WordpressApiUrlTb.Location = new Point(245, 1092);
+            WordpressApiUrlTb.Location = new Point(245, 1144);
             WordpressApiUrlTb.Margin = new Padding(3, 4, 3, 4);
             WordpressApiUrlTb.Name = "WordpressApiUrlTb";
             WordpressApiUrlTb.PlaceholderText = "https://example.com/wp-json/";
@@ -1134,7 +1138,7 @@
             // 
             label49.AutoSize = true;
             label49.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label49.Location = new Point(15, 1047);
+            label49.Location = new Point(15, 1099);
             label49.Name = "label49";
             label49.Size = new Size(82, 20);
             label49.TabIndex = 44;
@@ -1144,7 +1148,7 @@
             // 
             CategoryPageRb.AutoSize = true;
             CategoryPageRb.Checked = true;
-            CategoryPageRb.Location = new Point(369, 113);
+            CategoryPageRb.Location = new Point(369, 165);
             CategoryPageRb.Margin = new Padding(3, 4, 3, 4);
             CategoryPageRb.Name = "CategoryPageRb";
             CategoryPageRb.Size = new Size(156, 24);
@@ -1157,7 +1161,7 @@
             // ListUrlRb
             // 
             ListUrlRb.AutoSize = true;
-            ListUrlRb.Location = new Point(245, 116);
+            ListUrlRb.Location = new Point(245, 168);
             ListUrlRb.Margin = new Padding(3, 4, 3, 4);
             ListUrlRb.Name = "ListUrlRb";
             ListUrlRb.Size = new Size(106, 24);
@@ -1169,7 +1173,7 @@
             // label48
             // 
             label48.AutoSize = true;
-            label48.Location = new Point(15, 119);
+            label48.Location = new Point(15, 171);
             label48.Name = "label48";
             label48.Size = new Size(98, 20);
             label48.TabIndex = 40;
@@ -1177,7 +1181,7 @@
             // 
             // ProxyRetryLimitNumeric
             // 
-            ProxyRetryLimitNumeric.Location = new Point(245, 892);
+            ProxyRetryLimitNumeric.Location = new Point(245, 944);
             ProxyRetryLimitNumeric.Margin = new Padding(3, 4, 23, 27);
             ProxyRetryLimitNumeric.Name = "ProxyRetryLimitNumeric";
             ProxyRetryLimitNumeric.Size = new Size(57, 27);
@@ -1186,7 +1190,7 @@
             // label46
             // 
             label46.AutoSize = true;
-            label46.Location = new Point(15, 895);
+            label46.Location = new Point(15, 947);
             label46.Name = "label46";
             label46.Size = new Size(120, 20);
             label46.TabIndex = 38;
@@ -1195,7 +1199,7 @@
             // CookieCb
             // 
             CookieCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            CookieCb.Location = new Point(247, 495);
+            CookieCb.Location = new Point(247, 547);
             CookieCb.Margin = new Padding(3, 4, 3, 4);
             CookieCb.Multiline = true;
             CookieCb.Name = "CookieCb";
@@ -1206,7 +1210,7 @@
             // label43
             // 
             label43.AutoSize = true;
-            label43.Location = new Point(15, 499);
+            label43.Location = new Point(15, 551);
             label43.Name = "label43";
             label43.Size = new Size(55, 20);
             label43.TabIndex = 29;
@@ -1214,7 +1218,7 @@
             // 
             // TimeIntervalNumeric
             // 
-            TimeIntervalNumeric.Location = new Point(247, 385);
+            TimeIntervalNumeric.Location = new Point(247, 437);
             TimeIntervalNumeric.Margin = new Padding(3, 4, 3, 4);
             TimeIntervalNumeric.Name = "TimeIntervalNumeric";
             TimeIntervalNumeric.Size = new Size(57, 27);
@@ -1223,7 +1227,7 @@
             // label40
             // 
             label40.AutoSize = true;
-            label40.Location = new Point(15, 385);
+            label40.Location = new Point(15, 437);
             label40.Name = "label40";
             label40.Size = new Size(95, 20);
             label40.TabIndex = 24;
@@ -1233,7 +1237,7 @@
             // 
             RandomizeProxiesCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             RandomizeProxiesCb.AutoSize = true;
-            RandomizeProxiesCb.Location = new Point(245, 847);
+            RandomizeProxiesCb.Location = new Point(245, 899);
             RandomizeProxiesCb.Margin = new Padding(3, 4, 3, 4);
             RandomizeProxiesCb.Name = "RandomizeProxiesCb";
             RandomizeProxiesCb.Size = new Size(18, 17);
@@ -1243,7 +1247,7 @@
             // label39
             // 
             label39.AutoSize = true;
-            label39.Location = new Point(15, 845);
+            label39.Location = new Point(15, 897);
             label39.Name = "label39";
             label39.Size = new Size(135, 20);
             label39.TabIndex = 22;
@@ -1252,7 +1256,7 @@
             // ProxiesTb
             // 
             ProxiesTb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            ProxiesTb.Location = new Point(245, 721);
+            ProxiesTb.Location = new Point(245, 773);
             ProxiesTb.Margin = new Padding(3, 4, 3, 4);
             ProxiesTb.Multiline = true;
             ProxiesTb.Name = "ProxiesTb";
@@ -1263,7 +1267,7 @@
             // label38
             // 
             label38.AutoSize = true;
-            label38.Location = new Point(15, 725);
+            label38.Location = new Point(15, 777);
             label38.Name = "label38";
             label38.Size = new Size(56, 20);
             label38.TabIndex = 20;
@@ -1273,7 +1277,7 @@
             // 
             UseProxyCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             UseProxyCb.AutoSize = true;
-            UseProxyCb.Location = new Point(245, 676);
+            UseProxyCb.Location = new Point(245, 728);
             UseProxyCb.Margin = new Padding(3, 4, 3, 4);
             UseProxyCb.Name = "UseProxyCb";
             UseProxyCb.Size = new Size(18, 17);
@@ -1283,7 +1287,7 @@
             // label37
             // 
             label37.AutoSize = true;
-            label37.Location = new Point(15, 675);
+            label37.Location = new Point(15, 727);
             label37.Name = "label37";
             label37.Size = new Size(54, 20);
             label37.TabIndex = 18;
@@ -1291,7 +1295,7 @@
             // 
             // connectionTimeoutNumeric
             // 
-            connectionTimeoutNumeric.Location = new Point(247, 332);
+            connectionTimeoutNumeric.Location = new Point(247, 384);
             connectionTimeoutNumeric.Margin = new Padding(3, 4, 3, 4);
             connectionTimeoutNumeric.Name = "connectionTimeoutNumeric";
             connectionTimeoutNumeric.Size = new Size(57, 27);
@@ -1300,7 +1304,7 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Location = new Point(15, 335);
+            label20.Location = new Point(15, 387);
             label20.Name = "label20";
             label20.Size = new Size(143, 20);
             label20.TabIndex = 16;
@@ -1308,7 +1312,7 @@
             // 
             // MaximumPagesCrawlPerPostNumeric
             // 
-            MaximumPagesCrawlPerPostNumeric.Location = new Point(247, 272);
+            MaximumPagesCrawlPerPostNumeric.Location = new Point(247, 324);
             MaximumPagesCrawlPerPostNumeric.Margin = new Padding(3, 4, 3, 4);
             MaximumPagesCrawlPerPostNumeric.Name = "MaximumPagesCrawlPerPostNumeric";
             MaximumPagesCrawlPerPostNumeric.Size = new Size(57, 27);
@@ -1316,7 +1320,7 @@
             // 
             // MaximumPagesCrawlPerCategoryNumeric
             // 
-            MaximumPagesCrawlPerCategoryNumeric.Location = new Point(247, 215);
+            MaximumPagesCrawlPerCategoryNumeric.Location = new Point(247, 267);
             MaximumPagesCrawlPerCategoryNumeric.Margin = new Padding(3, 4, 3, 4);
             MaximumPagesCrawlPerCategoryNumeric.Name = "MaximumPagesCrawlPerCategoryNumeric";
             MaximumPagesCrawlPerCategoryNumeric.Size = new Size(57, 27);
@@ -1325,7 +1329,7 @@
             // HTTPUserAgentTb
             // 
             HTTPUserAgentTb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            HTTPUserAgentTb.Location = new Point(247, 440);
+            HTTPUserAgentTb.Location = new Point(247, 492);
             HTTPUserAgentTb.Margin = new Padding(3, 4, 3, 4);
             HTTPUserAgentTb.Name = "HTTPUserAgentTb";
             HTTPUserAgentTb.PlaceholderText = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
@@ -1335,7 +1339,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(15, 444);
+            label6.Location = new Point(15, 496);
             label6.Name = "label6";
             label6.Size = new Size(128, 20);
             label6.TabIndex = 12;
@@ -1344,7 +1348,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(15, 272);
+            label5.Location = new Point(15, 324);
             label5.Name = "label5";
             label5.Size = new Size(214, 40);
             label5.TabIndex = 10;
@@ -1353,7 +1357,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(15, 205);
+            label4.Location = new Point(15, 257);
             label4.Name = "label4";
             label4.Size = new Size(214, 40);
             label4.TabIndex = 8;
@@ -1363,7 +1367,7 @@
             // 
             CheckDuplicatePostViaContentCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             CheckDuplicatePostViaContentCb.AutoSize = true;
-            CheckDuplicatePostViaContentCb.Location = new Point(494, 165);
+            CheckDuplicatePostViaContentCb.Location = new Point(494, 217);
             CheckDuplicatePostViaContentCb.Margin = new Padding(3, 4, 3, 4);
             CheckDuplicatePostViaContentCb.Name = "CheckDuplicatePostViaContentCb";
             CheckDuplicatePostViaContentCb.Size = new Size(83, 24);
@@ -1375,7 +1379,7 @@
             // 
             CheckDuplicatePostViaTitleCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             CheckDuplicatePostViaTitleCb.AutoSize = true;
-            CheckDuplicatePostViaTitleCb.Location = new Point(369, 165);
+            CheckDuplicatePostViaTitleCb.Location = new Point(369, 217);
             CheckDuplicatePostViaTitleCb.Margin = new Padding(3, 4, 3, 4);
             CheckDuplicatePostViaTitleCb.Name = "CheckDuplicatePostViaTitleCb";
             CheckDuplicatePostViaTitleCb.Size = new Size(60, 24);
@@ -1387,7 +1391,7 @@
             // 
             CheckDuplicatePostViaUrlCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             CheckDuplicatePostViaUrlCb.AutoSize = true;
-            CheckDuplicatePostViaUrlCb.Location = new Point(247, 165);
+            CheckDuplicatePostViaUrlCb.Location = new Point(247, 217);
             CheckDuplicatePostViaUrlCb.Margin = new Padding(3, 4, 3, 4);
             CheckDuplicatePostViaUrlCb.Name = "CheckDuplicatePostViaUrlCb";
             CheckDuplicatePostViaUrlCb.Size = new Size(50, 24);
@@ -1399,7 +1403,7 @@
             // 
             ActiveForSchedulingCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ActiveForSchedulingCb.AutoSize = true;
-            ActiveForSchedulingCb.Location = new Point(247, 76);
+            ActiveForSchedulingCb.Location = new Point(247, 128);
             ActiveForSchedulingCb.Margin = new Padding(3, 4, 3, 4);
             ActiveForSchedulingCb.Name = "ActiveForSchedulingCb";
             ActiveForSchedulingCb.Size = new Size(18, 17);
@@ -1419,7 +1423,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(15, 164);
+            label3.Location = new Point(15, 216);
             label3.Name = "label3";
             label3.Size = new Size(176, 20);
             label3.TabIndex = 2;
@@ -1428,7 +1432,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(15, 75);
+            label2.Location = new Point(15, 127);
             label2.Name = "label2";
             label2.Size = new Size(155, 20);
             label2.TabIndex = 1;
@@ -1539,6 +1543,26 @@
             ImportSettingTb.Size = new Size(827, 167);
             ImportSettingTb.TabIndex = 1;
             ImportSettingTb.Text = "";
+            // 
+            // IsTryTestCb
+            // 
+            IsTryTestCb.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            IsTryTestCb.AutoSize = true;
+            IsTryTestCb.Location = new Point(247, 76);
+            IsTryTestCb.Margin = new Padding(3, 4, 3, 4);
+            IsTryTestCb.Name = "IsTryTestCb";
+            IsTryTestCb.Size = new Size(18, 17);
+            IsTryTestCb.TabIndex = 57;
+            IsTryTestCb.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(15, 75);
+            label9.Name = "label9";
+            label9.Size = new Size(79, 20);
+            label9.TabIndex = 56;
+            label9.Text = "Is Try Test?";
             // 
             // SiteDetail
             // 
@@ -1703,5 +1727,7 @@
         private Label label7;
         private CheckBox ActiveForPostTranslationCb;
         private CheckBox ActiveForPostSpinningCb;
+        private CheckBox IsTryTestCb;
+        private Label label9;
     }
 }

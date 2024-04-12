@@ -1,21 +1,13 @@
-﻿using Abot2.Core;
-using Abot2.Crawler;
-using Abot2.Poco;
+﻿using Abot2.Poco;
 using AbotX2.Parallel;
 using AbotX2.Poco;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using System;
-using System.Diagnostics.Tracing;
-using System.Net;
-using System.Text;
-using XLeech.Core;
 using XLeech.Core.Extensions;
 using XLeech.Core.Service;
 using XLeech.Data.Entity;
 using XLeech.Data.EntityFramework;
 using XLeech.Data.Repository;
-using Guid = System.Guid;
 
 namespace XLeech
 {
@@ -32,18 +24,22 @@ namespace XLeech
         public Dashboard()
         {
             InitializeComponent();
+
             if (Main.AppWindow?.AppDbContext != null)
             {
                 _dbContext = Main.AppWindow?.AppDbContext;
             }
+
             if (Main.AppWindow?.SiteConfigRepository != null)
             {
                 _siteConfigRepository = Main.AppWindow?.SiteConfigRepository;
             }
+
             if (Main.AppWindow?.CrawlerService != null)
             {
                 _crawlerService = Main.AppWindow?.CrawlerService;
             }
+
             if (Main.AppWindow.ParallelCrawlerEngine != null)
             {
                 _parallelCrawlerEngine = Main.AppWindow.ParallelCrawlerEngine;
@@ -57,19 +53,49 @@ namespace XLeech
                 postFailed = _parallelCrawlerEngine.Impls.ImplementationBag.PostFailed;
                 LogLabel(this.PostFailedLb, postFailed.ToString());
 
-                _parallelCrawlerEngine.CrawlerInstanceCreated += CrawlerInstanceCreated;
+                _parallelCrawlerEngine.CrawlerInstanceCreated += (sender, eventArgs) =>
+                {
+                    eventArgs.Crawler.CrawlBag.SiteConfig = eventArgs.SiteToCrawl.SiteBag.SiteConfig;
+                    eventArgs.Crawler.PageCrawlCompleted += async (abotSender, abotEventArgs) =>
+                    {
+                        var siteConfig = abotEventArgs.CrawlContext.CrawlBag.SiteConfig as SiteConfig;
+
+                        try
+                        {
+                            if (string.IsNullOrEmpty(abotEventArgs.CrawledPage.Content.Text) || siteConfig == null) throw new Exception("Content empty");
+
+                            var crawlerResult = await _crawlerService.PageCrawlCompleted(abotSender, abotEventArgs, siteConfig);
+
+                            Interlocked.Increment(ref postSuccess);
+                            _parallelCrawlerEngine.Impls.ImplementationBag.PostSuccess = postSuccess;
+
+                            LogLabel(this.PostSuccessLb, postSuccess.ToString());
+                            LogPost(string.Format("{0} Completed, {1}", abotEventArgs.CrawledPage.Uri, crawlerResult.IsSavePost ? "Save" : "Skiped"));
+                        }
+                        catch (Exception ex)
+                        {
+                            Interlocked.Increment(ref postFailed);
+                            _parallelCrawlerEngine.Impls.ImplementationBag.PostFailed = postFailed;
+
+                            LogLabel(this.PostFailedLb, postFailed.ToString());
+                            LogPost(string.Format("{0} Exception {1}", siteConfig?.Url, ex.Message));
+                        }
+                    };
+
+                    var postUrls = eventArgs.SiteToCrawl.SiteBag.PostUrls as List<string>;
+                    eventArgs.Crawler.CrawlContext.Scheduler.Add(postUrls.Select(u => new PageToCrawl(new Uri(u))));
+                };
 
                 _parallelCrawlerEngine.SiteCrawlStarting += (sender, args) =>
                 {
-
                 };
 
                 _parallelCrawlerEngine.SiteCrawlCompleted += async (sender, siteCrawleArgs) =>
                 {
                     var siteConfig = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.SiteConfig as SiteConfig;
-                    var categoryNextPageURL = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.CategoryNextPageURL as string;
-                    siteConfig.CategoryNextPageURL = categoryNextPageURL;
-                    siteConfig.IsDone = string.IsNullOrEmpty(categoryNextPageURL);
+                    var urlCategoryNextPage = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.CategoryNextPageURL as string;
+                    siteConfig.CategoryNextPageURL = urlCategoryNextPage;
+                    siteConfig.IsDone = string.IsNullOrEmpty(urlCategoryNextPage);
                     await _siteConfigRepository.UpdateAsync(siteConfig);
                     if (!siteConfig.IsDone)
                     {
@@ -85,48 +111,13 @@ namespace XLeech
             }
         }
 
-        private async void CrawlerInstanceCreated(object sender, CrawlerInstanceCreatedArgs eventArgs)
-        {
-            eventArgs.Crawler.CrawlBag.SiteConfig = eventArgs.SiteToCrawl.SiteBag.SiteConfig;
-            eventArgs.Crawler.PageCrawlCompleted += PageCrawlCompleted;
-
-            var postUrls = eventArgs.SiteToCrawl.SiteBag.PostUrls as List<string>;
-            eventArgs.Crawler.CrawlContext.Scheduler.Add(postUrls.Select(u => new PageToCrawl(new Uri(u))));
-        }
-
-        private async void PageCrawlCompleted(object abotSender, PageCrawlCompletedArgs abotEventArgs)
-        {
-            var siteConfig = abotEventArgs.CrawlContext.CrawlBag.SiteConfig as SiteConfig;
-
-            try
-            {
-                if (string.IsNullOrEmpty(abotEventArgs.CrawledPage.Content.Text) || siteConfig == null) throw new Exception("Content empty");
-
-                var crawlerResult = await _crawlerService.PageCrawlCompleted(abotSender, abotEventArgs, siteConfig);
-
-                Interlocked.Increment(ref postSuccess);
-                _parallelCrawlerEngine.Impls.ImplementationBag.PostSuccess = postSuccess;
-
-                LogLabel(this.PostSuccessLb, postSuccess.ToString());
-                LogPost(string.Format("{0} Completed, {1}", abotEventArgs.CrawledPage.Uri, crawlerResult.IsSavePost ? "Save" : "Skiped"));
-            }
-            catch (Exception ex)
-            {
-                Interlocked.Increment(ref postFailed);
-                _parallelCrawlerEngine.Impls.ImplementationBag.PostFailed = postFailed;
-
-                LogLabel(this.PostFailedLb, postFailed.ToString());
-                LogPost(string.Format("{0} Exception {1}", siteConfig?.Url, ex.Message));
-            }
-        }
-
         private static CrawlConfigurationX GetSafeConfig()
         {
             return new CrawlConfigurationX
             {
                 MaxPagesToCrawl = 1,
-                MinCrawlDelayPerDomainMilliSeconds = 10000,
-                MaxConcurrentSiteCrawls = 3,
+                //MinCrawlDelayPerDomainMilliSeconds = 10000,
+                //MaxConcurrentSiteCrawls = 3,
                 IsSendingCookiesEnabled = true
                 //HttpRequestTimeoutInSeconds= 60,
                 //MaxConcurrentThreads = 5,
@@ -154,7 +145,6 @@ namespace XLeech
                 MessageBox.Show("No sites to crawle");
             }
         }
-
 
         private async Task<ParallelCrawlerEngine> CrawleSite(SiteConfig siteConfig)
         {

@@ -19,8 +19,12 @@ namespace XLeech.Core.Service
 
         public async Task<CrawlerResult> PageCrawlCompleted(object? abotSender, PageCrawlCompletedArgs abotEventArgs, SiteConfig siteConfig)
         {
-            var crawlerResult = new CrawlerResult();
+            CrawlerResult crawlerResult;
             var wordpressProcessor = new WordpressProcessor(siteConfig);
+            if (wordpressProcessor.IsTryTest)
+            {
+                return await Task.FromResult(new CrawlerResult { IsSaveCategory = true, IsSavePost = true});
+            }
 
             if (siteConfig.IsPageUrl)
             {
