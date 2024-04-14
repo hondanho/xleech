@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using XLeech.Data.EntityFramework;
 
 namespace XLeech.Data.Repository
@@ -6,15 +7,27 @@ namespace XLeech.Data.Repository
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly AppDbContext _dbContext;
+        private readonly DbSet<TEntity> _entities;
 
         public Repository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+            _entities = dbContext.Set<TEntity>();
+        }
+
+        public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _entities.Where(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _dbContext.Set<TEntity>().ToListAsync();
+        }
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return _dbContext.Set<TEntity>().ToList();
         }
 
         public async Task<TEntity> GetByIdAsync(int id)

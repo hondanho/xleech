@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using XLeech.Core.Service;
 using AbotX2.Parallel;
-using XLeech.Core;
-using MathNet.Numerics;
 using AbotX2.Poco;
 
 namespace XLeech
@@ -44,7 +42,7 @@ namespace XLeech
             services.AddDbContext<AppDbContext>((serviceProvider, options) =>
             {
                 options.UseSqlServer(connectionString);
-            });
+            }, ServiceLifetime.Transient);
 
             services.AddHttpClient();
             services.AddScoped<IChatGPTService, ChatGPTService>();
@@ -77,9 +75,9 @@ namespace XLeech
                 return parallelCrawlerEngine;
             });
             services.AddSingleton<IConfiguration>(configuration);
-            services.AddScoped<Repository<CategoryConfig>>();
-            services.AddScoped<Repository<Data.Entity.SiteConfig>>();
-            services.AddScoped<Repository<PostConfig>>();
+            services.AddTransient<Repository<CategoryConfig>>();
+            services.AddTransient<Repository<Data.Entity.SiteConfig>>();
+            services.AddTransient<Repository<PostConfig>>();
             services.AddScoped<ICrawlerService, CrawlerService>();
 
             // Add your main form

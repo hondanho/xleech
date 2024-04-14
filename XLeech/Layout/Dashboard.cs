@@ -15,6 +15,8 @@ namespace XLeech
     {
         private readonly AppDbContext _dbContext;
         private readonly Repository<SiteConfig> _siteConfigRepository;
+        private readonly Repository<CategoryConfig> _categoryConfigRepository;
+        private readonly Repository<PostConfig> _postConfigRepository;
         private readonly ICrawlerService _crawlerService;
         private ParallelCrawlerEngine _parallelCrawlerEngine;
         private int categoryCrawled = 0;
@@ -83,6 +85,9 @@ namespace XLeech
                     };
 
                     var postUrls = eventArgs.SiteToCrawl.SiteBag.PostUrls as List<string>;
+                    eventArgs.Crawler.CrawlContext.CrawlConfiguration.MinCrawlDelayPerDomainMilliSeconds = 3000;
+                    eventArgs.Crawler.CrawlContext.CrawlConfiguration.MaxLinksPerPage = 1;
+                    eventArgs.Crawler.CrawlContext.CrawlConfiguration.MaxPagesToCrawl = 1;
                     eventArgs.Crawler.CrawlContext.Scheduler.Add(postUrls.Select(u => new PageToCrawl(new Uri(u))));
                 };
 
@@ -92,14 +97,24 @@ namespace XLeech
 
                 _parallelCrawlerEngine.SiteCrawlCompleted += async (sender, siteCrawleArgs) =>
                 {
+                    Interlocked.Increment(ref categoryCrawled);
+                    LogLabel(this.CategoryCrawledLb, categoryCrawled.ToString());
+                    _parallelCrawlerEngine.Impls.ImplementationBag.CategoryCrawled = categoryCrawled;
+
                     var siteConfig = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.SiteConfig as SiteConfig;
+
                     var urlCategoryNextPage = siteCrawleArgs.CrawledSite.SiteToCrawl.SiteBag.CategoryNextPageURL as string;
-                    siteConfig.CategoryNextPageURL = urlCategoryNextPage;
-                    siteConfig.IsDone = string.IsNullOrEmpty(urlCategoryNextPage);
+                    var site = await _siteConfigRepository.GetByIdAsync(siteConfig.Id);
+                    site.CategoryNextPageURL = urlCategoryNextPage;
+                    site.IsDone = string.IsNullOrEmpty(urlCategoryNextPage);
                     await _siteConfigRepository.UpdateAsync(siteConfig);
-                    if (!siteConfig.IsDone)
+                    if (!site.IsDone)
                     {
-                        CrawleSite(siteConfig);
+                        //var category = _dbContext.Categories.Where(x => x.SiteID == site.Id).FirstOrDefault();
+                        //site.Category = category;
+                        //var post = _dbContext.Posts.Where(x => x.SiteID == site.Id).FirstOrDefault();
+                        //site.Post = post;
+                        CrawleSite(site);
                     }
                 };
 
@@ -116,9 +131,12 @@ namespace XLeech
             return new CrawlConfigurationX
             {
                 MaxPagesToCrawl = 1,
-                //MinCrawlDelayPerDomainMilliSeconds = 10000,
-                //MaxConcurrentSiteCrawls = 3,
-                IsSendingCookiesEnabled = true
+                MinCrawlDelayPerDomainMilliSeconds = 3000,
+                MaxConcurrentSiteCrawls = 3,
+                IsSendingCookiesEnabled = true,
+                CrawlTimeoutSeconds = 100,
+                MaxRetryCount = 2,
+                MinRetryDelayInMilliseconds = 100,
                 //HttpRequestTimeoutInSeconds= 60,
                 //MaxConcurrentThreads = 5,
             };
@@ -126,17 +144,21 @@ namespace XLeech
 
         private async Task CrawleEngineAsync()
         {
-            var sites = _dbContext.Sites
+            var sites = await _siteConfigRepository
                        .Where(x => x.ActiveForScheduling && !x.IsDone)
                        .Include(x => x.Category)
                        .Include(y => y.Post)
                        .AsNoTracking()
-                       .ToList();
+                       .ToListAsync();
             this.AllSiteLb.Text = sites?.Count.ToString();
             if (sites != null && sites.Any())
             {
                 foreach (var site in sites)
                 {
+                    var category = _dbContext.Categories.Where(x => x.SiteID == site.Id).AsNoTracking().FirstOrDefault();
+                    site.Category = category;
+                    var post = _dbContext.Posts.Where(x => x.SiteID == site.Id).AsNoTracking().FirstOrDefault();
+                    site.Post = post;
                     CrawleSite(site);
                 }
             }
@@ -174,6 +196,7 @@ namespace XLeech
                 {
                     var urlCategoryPageCrawle = _crawlerService.GetURLCategoryPageCrawle(siteConfig);
                     var categoryPageInfo = await _crawlerService.GetInfoCategoryPage(siteConfig, config);
+                    LogSite(string.Format("{0}, post count: {1}", urlCategoryPageCrawle, categoryPageInfo.PostUrls.Count()));
                     if (categoryPageInfo != null && categoryPageInfo.PostUrls.Any())
                     {
                         var siteToCrawle = new SiteToCrawl
@@ -197,14 +220,14 @@ namespace XLeech
             return new ParallelCrawlerEngine(config);
         }
 
-        private void StartBtn_Click(object sender, EventArgs e)
+        private async void StartBtn_Click(object sender, EventArgs e)
         {
             CrawleEngineAsync();
         }
 
         private async void ReCrawleBtn_Click(object sender, EventArgs e)
         {
-            var sites = _dbContext.Sites
+            var sites = _siteConfigRepository.Where(x => true)
                        .Include(x => x.Category)
                        .Include(y => y.Post)
                        .ToList();

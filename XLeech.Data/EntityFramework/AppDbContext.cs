@@ -3,11 +3,18 @@ using XLeech.Data.Entity;
 
 namespace XLeech.Data.EntityFramework
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : ThreadSafeDbContext
     {
         public AppDbContext() { }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            string ConnectionString = "Data Source=.;Initial Catalog=XLeech;Integrated Security=True;Pooling=False";
+            optionsBuilder.UseSqlServer(ConnectionString);
+            base.OnConfiguring(optionsBuilder); // don't forget to call the base method
         }
 
         public virtual DbSet<SiteConfig> Sites { get; set; }
