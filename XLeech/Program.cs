@@ -55,7 +55,14 @@ namespace XLeech
                     //MaxConcurrentSiteCrawls = 1,
                     //MaxPagesToCrawl = 1,
                     //IsIgnoreRobotsDotTextIfRootDisallowedEnabled = true,
-                    IsSendingCookiesEnabled = true
+                    IsSendingCookiesEnabled = true,
+                    MaxPagesToCrawl = 1,
+                    MinCrawlDelayPerDomainMilliSeconds = 3000,
+                    MinSiteToCrawlRequestDelayInSecs = 3000,
+                    MaxConcurrentSiteCrawls = 3,
+                    CrawlTimeoutSeconds = 100,
+                    MaxRetryCount = 2,
+                    MinRetryDelayInMilliseconds = 100
                 };
                 var siteToCrawlProvider = new AlwaysOnSiteToCrawlProvider();
                 var parallelCrawlerEngine = new ParallelCrawlerEngine(

@@ -132,6 +132,7 @@ namespace XLeech
             {
                 MaxPagesToCrawl = 1,
                 MinCrawlDelayPerDomainMilliSeconds = 3000,
+                MinSiteToCrawlRequestDelayInSecs= 3000,
                 MaxConcurrentSiteCrawls = 3,
                 IsSendingCookiesEnabled = true,
                 CrawlTimeoutSeconds = 100,
