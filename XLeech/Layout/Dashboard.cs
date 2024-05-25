@@ -27,19 +27,19 @@ namespace XLeech
         {
             InitializeComponent();
 
-            if (Main.AppWindow?.AppDbContext != null)
+            if (Main.AppWindow.AppDbContext != null)
             {
-                _dbContext = Main.AppWindow?.AppDbContext;
+                _dbContext = Main.AppWindow.AppDbContext;
             }
 
-            if (Main.AppWindow?.SiteConfigRepository != null)
+            if (Main.AppWindow.SiteConfigRepository != null)
             {
-                _siteConfigRepository = Main.AppWindow?.SiteConfigRepository;
+                _siteConfigRepository = Main.AppWindow.SiteConfigRepository;
             }
 
-            if (Main.AppWindow?.CrawlerService != null)
+            if (Main.AppWindow.CrawlerService != null)
             {
-                _crawlerService = Main.AppWindow?.CrawlerService;
+                _crawlerService = Main.AppWindow.CrawlerService;
             }
 
             if (Main.AppWindow.ParallelCrawlerEngine != null)
@@ -110,10 +110,10 @@ namespace XLeech
                     await _siteConfigRepository.UpdateAsync(siteConfig);
                     if (!site.IsDone)
                     {
-                        //var category = _dbContext.Categories.Where(x => x.SiteID == site.Id).FirstOrDefault();
-                        //site.Category = category;
-                        //var post = _dbContext.Posts.Where(x => x.SiteID == site.Id).FirstOrDefault();
-                        //site.Post = post;
+                        var category = _dbContext.Categories.Where(x => x.SiteID == site.Id).FirstOrDefault();
+                        site.Category = category;
+                        var post = _dbContext.Posts.Where(x => x.SiteID == site.Id).FirstOrDefault();
+                        site.Post = post;
                         CrawleSite(site);
                     }
                 };
@@ -132,7 +132,7 @@ namespace XLeech
             {
                 MaxPagesToCrawl = 1,
                 MinCrawlDelayPerDomainMilliSeconds = 3000,
-                MinSiteToCrawlRequestDelayInSecs= 3000,
+                MinSiteToCrawlRequestDelayInSecs = 3000,
                 MaxConcurrentSiteCrawls = 3,
                 IsSendingCookiesEnabled = true,
                 CrawlTimeoutSeconds = 100,
