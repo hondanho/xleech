@@ -287,11 +287,13 @@ namespace XLeech
                 siteConfig.CategoryNextPageURL = null;
 
                 var category = siteConfig.Category;
+                category.Site = null;
                 category.CreateTime = now;
                 category.UpdateTime = now;
                 category.Id = 0;
 
                 var post = siteConfig.Post;
+                post.Site = null;
                 post.Id = 0;
                 post.CreateTime = now;
                 post.UpdateTime = now;

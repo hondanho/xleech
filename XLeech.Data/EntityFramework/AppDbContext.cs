@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using XLeech.Data.Entity;
 
 namespace XLeech.Data.EntityFramework
@@ -12,9 +13,17 @@ namespace XLeech.Data.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string ConnectionString = "Data Source=.;Initial Catalog=XLeech;Integrated Security=True;Pooling=False";
-            optionsBuilder.UseSqlServer(ConnectionString);
-            base.OnConfiguring(optionsBuilder); // don't forget to call the base method
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("XLeech");
+                optionsBuilder.UseSqlServer(connectionString);
+                base.OnConfiguring(optionsBuilder); // don't forget to call the base method
+            }
         }
 
         public virtual DbSet<SiteConfig> Sites { get; set; }
